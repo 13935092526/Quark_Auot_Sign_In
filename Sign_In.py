@@ -177,7 +177,6 @@ def main():
         msg += f"🙍🏻‍♂️ 第{i + 1}个账号"
         # 登录
         msg += Quark(user_data).do_sign()
-        msg += "\n"
 
     if webhook:
         send_text(webhook,msg)
