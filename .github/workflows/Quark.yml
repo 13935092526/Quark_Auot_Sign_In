@@ -1,0 +1,29 @@
+name: Quark
+
+# 定时触发 使用cron语法 使用UTC时间
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  sign-in:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Sign-in
+        env:
+          COOKIE_QUARK: ${{ secrets.COOKIE_QUARK }}
+          WebHook: ${{ secrets.WebHook }}
+        run: |
+          python Sign_In.py
