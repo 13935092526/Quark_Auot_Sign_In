@@ -4,6 +4,8 @@ name: Quark
 on:
   schedule:
     - cron: '0 0 * * *'
+  # 开启手动运行
+  workflow_dispatch:
 
 jobs:
   sign-in:
