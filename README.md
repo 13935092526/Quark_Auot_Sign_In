@@ -22,7 +22,7 @@
 
 3. ### 获取COOKIE_QUARK
 
-   1. 使用手机抓包工具
+   1. 使用手机抓包工具 [reqable](https://reqable.com/zh-CN/)，必须安装证书才能抓取。在安卓模拟器上安装该APP，并在模拟器设置中`磁盘共享`变为可写系统盘，通过MT管理器将证书移动至根目录指定位置。
 
    2. 搜索接口`https://drive-m.quark.cn/1/clouddrive/capacity/growth/info`获取请求信息
 
