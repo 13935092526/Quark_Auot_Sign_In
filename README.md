@@ -4,7 +4,11 @@
 
 通过**GitHub Actions**每日自动执行，实现夸克网盘的自动签到，并实现企业微信机器人的推送服务
 
+> 🆕 签到结果现以**杂志级信息卡片图片**推送到企业微信群（多账号堆叠为一张竖屏长图），图片由内置的 [`t2i`](t2i/) 渲染库离线生成；若图片渲染失败会自动回退为文字推送。
 
+## 推送效果
+
+签到完成后，会把每个账号的「总可用容量 / 签到获得容量 / 今日新增 / 连签进度」渲染成一张白色圆角卡片并堆叠为长图，通过企业微信机器人 `image` 消息推送。渲染纯离线、无需外部 API，仅依赖 Pillow；Runner 上需安装中文字体（工作流已自动 `apt-get install fonts-noto-cjk`）。
 
 ## 使用指南
 
@@ -17,8 +21,6 @@
    3. 注册成功后，登陆手机/桌面端企业微信，在企业群中点击设置，添加机器人，并获取**`WebHook`**码
 
       **注意：`WebHook`不要泄露给他人，否则可能会面临机器人推送轰炸**
-      
-      
 
 3. ### 获取COOKIE_QUARK
 
@@ -31,7 +33,7 @@
       - 例如如获得以下链接：
 
         ```
-        https://drive-m.quark.cn/1/clouddrive/capacity/growth/info?kps=AARWcp9UM71t5VzV9i5pBJ46666666666FFnr%2FHDAKlTnIb%2FAI8I0cWt%2B89iAR6%2BJfMwbXCP9vhae%2F2nwBeYEKnA%3D%3D ; sign=AATNT4rAQm1S3J156564648JQTMfd5E0KLbsvSZ4sQfffz%2Be81U5OojkcIQ8%3D ; vcode=1741214159830
+        https://drive-m.quark.cn/1/clouddrive/capacity/growth/info?kps=AARWcp9UM71t5VzV9i5pBJ46666666666FFnr%2FHDAKlTnIb%2FAI8I0cWt%2B89iAR6%2BJfMwbXCP9vhae%2F2nwBeYEKnA%3D%3D ; sign=AATNT4rAQm1S3J156564648JTMfd5E0KLbsvSZ4sQfffz%2Be81U5OojkcIQ8%3D ; vcode=1741214159830
         ```
 
       - 将三个参数取出并整理得到以下形式，其中`user`需要自己命名
@@ -51,9 +53,6 @@
         user=222; kps=3333; sign=44444; vcode=555;
         ```
 
-
-   
-
 4. ### Fork项目
 
    1. 将本项目 `Fork` 到自己的仓库
@@ -63,13 +62,19 @@
    5. 重复以上过程 **【Name】** 填写`WebHook`，**【Secret】** 填写WebHook码
       - 不填写WebHook不影响签到服务本体，只是没有签到推送服务
 
-
-   
-
 5. ### 测试
 
    1. 进入 **Actions** 选项卡，点击左侧的 **Quark** 
    2. 点击右侧的 **Run workflow** 按钮
    3. 在几秒钟后刷新网页，列表出现 左侧有绿灯的【**Quark** 】，点击进入
    4. 点击**【sign-in 】->【Run Sign-in】**查看日志
-   5. 出现签到信息运行成功
+   5. 出现签到信息运行成功，企业微信群收到签到报告图片
+
+## 关于 t2i 渲染库
+
+`t2i/` 是从 [text2img](https://github.com/13935092526) 工具集内嵌进来的纯 Python 渲染库，`Sign_In.py` 通过 `from t2i import render_template, push` 调用：
+
+- `render_template("quark_checkin", {"accounts": [...]}, output=...)` 渲染签到报告长图；
+- `push([png], title=..., webhook=..., wecom_only=True)` 走企业微信 `image` 消息推送。
+
+如需调整卡片样式，编辑 `t2i/templates/quark_checkin.py` 与共享主题 `t2i/templates/_style.py` 即可。
