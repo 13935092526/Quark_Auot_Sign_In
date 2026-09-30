@@ -3,7 +3,7 @@ name: Quark
 # 定时触发 使用cron语法 使用UTC时间
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 2 * * *'
   # 开启手动运行
   workflow_dispatch:
 
